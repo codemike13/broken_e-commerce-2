@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <% include ../partials/head %>
+  <body>
+    
+    <% include ../partials/nav %>
+    <div class="container" style="margin-top: 10%">
+        <% if (success.length > 0) { %>
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismmiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <%= success[0] %>
+          </div>
+        
+        <% } %>
+        <table id="cart" class="table table-hover table-condensed">
+                  <thead>
+                  <tr>
+                    <th style="width:50%">cartItem</th>
+                    <th style="width:10%">Price</th>
+                    <th style="width:8%">Quantity</th>
+                    <th style="width:22%" class="text-center">Subtotal</th>
+                    <th style="width:10%"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% for(let i = 0; i < foundCart.items.length; i++) { 
+                        let cartItem = foundCart.items[i]    
+                    %>
+                      <tr>
+                        <td data-th="cartItem">
+                          <div class="row">
+                            <div class="col-sm-2 hidden-xs">
+                                <img style="height: 100px; width: 100px" src="<%= cartItem.item.image %>" alt="..." class="img-responsive"/>
+                            </div>
+                            <div class="col-sm-10" style="padding-left: 15%">
+                              <h4 class="nomargin">cartItem <%= i + 1 %></h4>
+                              <p><%= cartItem.item.name %></p>
+                            </div>
+                          </div>
+                        </td>
+                        <td data-th="Price">$ <%= cartItem.item.price %></td>
+                        <td data-th="Quantity">
+                          <div class="text-center"><%= cartItem.quantity %></div>
+                        </td>
+                        <td data-th="Subtotal" class="text-center">$ <%= (cartItem.item.price * cartItem.quantity) %></td>
+                        <td class="actions" data-th="">
+                          <form method="POST" action='/api/cart/remove?_method=DELETE'>
+                            <input type="hidden" name="item"  value="<%= cartItem._id %>">
+                            <input type="hidden" name="price" value="<%= cartItem.price %>">
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button> 
+                          </form>
+                        </td>
+                      
+                      </tr>
+                    <% } %>
+                </tbody>
+                <tfoot>
+               
+                  <tr>
+                    <td><a href="/" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+                    <td colspan="2" class="hidden-xs"></td>
+                    
+                    <td class="hidden-xs text-center"><strong>Total $<%= foundCart.total %></strong></td>
+                    <td><a href="#"><i class="far fa-credit-card fa-3x" data-toggle="modal" data-target="#exampleModal"></i></a></td>
+                  </tr>
+                </tfoot>
+              </table>
+              
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Stripe Payment</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                                    <div class="container">
+                        <div class="row">
+                            <!-- You can make it whatever width you want. I'm making it full width
+                                on <= small devices and 4/12 page width on >= medium devices -->
+                            <div class="col">
+                            
+                            
+                                <!-- CREDIT CARD FORM STARTS HERE -->
+                                <div class="panel panel-default credit-card-box">
+                                    <div class="panel-heading display-table" >
+                                        <div class="row display-tr" >
+                                            <h3 class="panel-title display-td" >Payment Details</h3>
+                                            <div class="display-td" >                            
+                                                <img class="img-responsive pull-right" src="http://i76.imgup.net/accepted_c22e0.png">
+                                            </div>
+                                        </div>                    
+                                    </div>
+                                    <div class="panel-body">
+                                        <form role="form" id="payment-form" method="POST" action="/api/cart/payment">
+                                            <% if (foundCart) { %>
+                                                <input type='hidden' name='stripeMoney' value='<%= foundCart.total %>' />
+                                            <% } %>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label for="cardNumber">CARD NUMBER</label>
+                                                        <div class="input-group">
+                                                            <input
+                                                                id='card-number' 
+                                                                type="tel"
+                                                                class="form-control"
+                                                                name="cardNumber"
+                                                                placeholder="Valid Card Number"
+                                                                autocomplete="cc-number"
+                                                                required autofocus 
+                                                            />
+                                                        </div>
+                                                    </div>                            
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-7 col-md-7">
+                                                    <div class="form-group">
+                                                        <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span> DATE</label>
+                                                        <input
+                                                            id='card-expiry-month-year' 
+                                                            type="tel" 
+                                                            class="form-control" 
+                                                            name="cardExpiry"
+                                                            placeholder="MM / YY"
+                                                            autocomplete="cc-exp"
+                                                            required 
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-5 col-md-5 pull-right">
+                                                    <div class="form-group">
+                                                        <label for="cardCVC">CV CODE</label>
+                                                        <input
+                                                            id='card-cvc' 
+                                                            type="tel" 
+                                                            class="form-control"
+                                                            name="cardCVC"
+                                                            placeholder="CVC"
+                                                            autocomplete="cc-csc"
+                                                            required
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <button class="btn btn-success btn-lg btn-block" type="submit" id='cardSubmit'>Pay: $<%= foundCart.total %></button>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="display:none;">
+                                                <div class="col">
+                                                    <p class="payment-errors"></p>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>   
+                                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+      </div>
+    </body>
+  
+</html>

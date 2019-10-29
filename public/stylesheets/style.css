@@ -1,0 +1,15 @@
+body {
+  padding: 50px;
+  background: -webkit-linear-gradient(left, #3931af, #00c6ff)
+}
+
+.row {
+    padding-bottom: 25px;
+}
+
+.card {
+    width: 18rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    min-height: 430px;
+}

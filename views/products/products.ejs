@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    
+    <% include ../partials/head %>
+
+    <div class="row">
+
+        <% include ../partials/nav %>
+
+        <% for (let product of products) { %>
+          <div class="col">      
+              <div class="card" style="width: 18rem;">
+                  <a href="/api/products/<%= product._id %>"> 
+                    <!-- <img class="card-img-top" src=" product.image " alt="Card image cap" /> -->
+                    <img class="card-img-top" src="/images/product.jpeg" alt="Card image cap" />
+                  </a> 
+                  <div class="card-body">
+                    <h5 class="card-title">Name:  <%= product.name %></h5>
+                    <p class="card-text">Category: <%= product.category.name %></p>
+                    <p class="card-text">$  <%= product.price %></p>
+                    <a href="/api/products/<%= product._id %>" class="btn btn-primary">Shop</a>
+                  </div>
+              </div>
+          </div>
+        <% } %>
+    </div>
+  </body>
+</html>

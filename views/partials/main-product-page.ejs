@@ -1,0 +1,50 @@
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3 text-center">Best Online Shopping</h1>
+    </div>
+</div>
+
+<div class="row" id="productSearchResults">
+    <% for (let product of products) { %>
+        <div class="col">      
+            <div class="card">
+                <a href="/api/products/<%= product._id %>"> 
+                <!-- <img class="card-img-top" src="product.image" alt="Card image cap" /> -->
+                <img class="card-img-top" src="/images/product.jpeg" alt="Card image cap" />
+                </a> 
+                <div class="card-body">
+                <h5 class="card-title">Name: <%= product.name %></h5>
+                <p class="card-text">Category: <%= product.category.name %></p>
+                <p class="card-text">$ <%= product.price %></p>
+                <a href="/api/products/<%= product._id %>" class="btn btn-primary">Shop</a>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<nav aria-label="Page navigation example" class="d-flex justify-content-center">
+    <ul class="pagination">
+          
+        <li class="page-item <%= (current === 1) ? 'disabled' : '' %>">
+            <a class="page-link" href="/page/<%= previousPage %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        
+        <li>
+            <% for (let i = 1; i <= pages; i++) { %>
+                <li class="page-item <%= (i === current) ? 'disabled' : '' %>"><a class="page-link" href="/page/<%= i %>"><%= i %></a></li>
+            <% } %>
+        </li>
+
+        <li class="page-item <%= (current === pages - 1) ? 'disabled' : '' %>">
+            <a class="page-link" href="/page/<%= nextPage %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
